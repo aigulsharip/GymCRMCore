@@ -1,5 +1,6 @@
-package com.example.GymCRM.entity;
+package com.example.gymcrmcore.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,14 +17,17 @@ public class Training {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trainee_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Trainee trainee;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trainer_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Trainer trainer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "training_type_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private TrainingType trainingType;
 
     @Column(name = "training_name", nullable = false)

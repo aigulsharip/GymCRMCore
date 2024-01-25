@@ -1,25 +1,18 @@
-package com.example.GymCRM.service.impl;
+package com.example.gymcrmcore.service;
 
-import com.example.GymCRM.dto.TraineeDTO;
-import com.example.GymCRM.dto.TrainerDTO;
-import com.example.GymCRM.dto.TrainingDTO;
-import com.example.GymCRM.entity.Training;
-import com.example.GymCRM.entity.TrainingType;
-import com.example.GymCRM.mapper.TraineeMapper;
-import com.example.GymCRM.mapper.TrainerMapper;
-import com.example.GymCRM.mapper.TrainingMapper;
-import com.example.GymCRM.repository.TrainingRepository;
-import com.example.GymCRM.repository.TrainingTypeRepository;
-import com.example.GymCRM.service.interfaces.TraineeService;
-import com.example.GymCRM.service.interfaces.TrainerService;
-import com.example.GymCRM.service.interfaces.TrainingService;
+import com.example.gymcrmcore.entity.Trainee;
+import com.example.gymcrmcore.entity.Trainer;
+import com.example.gymcrmcore.entity.Training;
+import com.example.gymcrmcore.entity.TrainingType;
+import com.example.gymcrmcore.repository.TrainingRepository;
+import com.example.gymcrmcore.repository.TrainingTypeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TrainingServiceImpl implements TrainingService {
+public class TrainingService {
 
     private final TrainingRepository trainingRepository;
 
@@ -29,65 +22,54 @@ public class TrainingServiceImpl implements TrainingService {
 
     private final TrainerService trainerService;
 
-    private final TrainerMapper trainerMapper;
-
-    private final TraineeMapper traineeMapper;
-
-    private final TrainingMapper trainingMapper;
-
-    public TrainingServiceImpl(TrainingRepository trainingRepository, TrainingTypeRepository trainingTypeRepository, TraineeService traineeService, TrainerService trainerService, TrainerMapper trainerMapper, TraineeMapper traineeMapper, TrainingMapper trainingMapper) {
+    public TrainingService(TrainingRepository trainingRepository, TrainingTypeRepository trainingTypeRepository, TraineeService traineeService, TrainerService trainerService) {
         this.trainingRepository = trainingRepository;
         this.trainingTypeRepository = trainingTypeRepository;
         this.traineeService = traineeService;
         this.trainerService = trainerService;
-        this.trainerMapper = trainerMapper;
-        this.traineeMapper = traineeMapper;
-        this.trainingMapper = trainingMapper;
     }
 
 
-    public List<TrainingDTO> getAllTraining() {
-        List<Training> trainers = trainingRepository.findAll();
-        return trainingMapper.toDtoList(trainers);
+    public List<Training> getAllTraining() {
+        return trainingRepository.findAll();
+
     }
 
-    public TrainingDTO getTrainingById(Long id) {
+    public Training getTrainingById(Long id) {
         Optional<Training> trainerOptional = trainingRepository.findById(id);
-        return trainerOptional.map(trainingMapper::toDTO).orElse(null);
+        return trainerOptional.orElse(null);
     }
 
 
-    public TrainingDTO createTraining(TrainingDTO trainingDTO) {
+    public Training createTraining(Training training) {
 
-        TrainingType specialization = trainingTypeRepository.findById(trainingDTO.getTrainingType().getId())
+        TrainingType specialization = trainingTypeRepository.findById(training.getTrainingType().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid specialization ID"));
 
-        Long traineeId = trainingDTO.getTrainee().getId();
-        Optional<TraineeDTO> traineeOptional = traineeService.getTraineeByIdOptional(traineeId);
-        TraineeDTO traineeDTO = traineeOptional.orElseThrow(() -> new IllegalArgumentException("Trainee not found"));
+        Long traineeId = training.getTrainee().getId();
+        Optional<Trainee> traineeOptional = traineeService.getTraineeById(traineeId);
+        Trainee trainee = traineeOptional.orElseThrow(() -> new IllegalArgumentException("Trainee not found"));
 
 
-        Long trainerId = trainingDTO.getTrainer().getId();
-        Optional<TrainerDTO> trainerOptional = trainerService.getTrainerByIdOptional(trainerId);
-        TrainerDTO trainerDTO = trainerOptional.orElseThrow(() -> new IllegalArgumentException("Trainer not found"));
+        Long trainerId = training.getTrainer().getId();
+        Optional<Trainer> trainerOptional = trainerService.getTrainerById(trainerId);
+        Trainer trainer = trainerOptional.orElseThrow(() -> new IllegalArgumentException("Trainer not found"));
 
-        Training training = trainingMapper.toEntity(trainingDTO);
-        training.setTrainee(traineeMapper.traineeDTOToTrainee(traineeDTO));
-        training.setTrainer(trainerMapper.toEntity(trainerDTO));
+        training.setTrainee(trainee);
+        training.setTrainer(trainer);
         training.setTrainingType(specialization);
 
         Training savedTraining = trainingRepository.save(training);
-        return trainingMapper.toDTO(savedTraining);
+        return savedTraining;
     }
 
 
-    public TrainingDTO updateTraining(Long id, TrainingDTO trainingDTO) {
+    public Training updateTraining(Long id, Training training) {
         Optional<Training> trainerOptional = trainingRepository.findById(id);
         if (trainerOptional.isPresent()) {
-            Training trainerToUpdate = trainingMapper.toEntity(trainingDTO);
-            trainerToUpdate.setId(id); // Set ID for the existing entity
-            Training updatedTrainer = trainingRepository.save(trainerToUpdate);
-            return trainingMapper.toDTO(updatedTrainer);
+            training.setId(id); // Set ID for the existing entity
+            Training updatedTrainer = trainingRepository.save(training);
+            return updatedTrainer;
         }
         return null; // Handle this case in your controller layer as per your requirement
     }

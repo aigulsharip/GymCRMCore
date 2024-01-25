@@ -1,83 +1,62 @@
-http://localhost:8080/api/users
-Create User:
-{
-  "firstName": "Jane",
-  "lastName": "Doe",
-}
-
-Output: 
-{
-    "id": 1,
-    "firstName": "Jane",
-    "lastName": "Doe",
-    "username": "jane.doe",
-    "password": "1fa11ba0-0",
-    "isActive": true
-}
-######################################
-
-http://localhost:8080/api/training-types
-{
-  "trainingTypeName": "Cardio Training"
-}
-
 
 ##########################################
 Create trainees
-http://localhost:8080/api/trainees
+http://localhost:8080/trainees
 
 {
-    "dateOfBirth": "1995-05-15",
-    "address": "123 Main St, City, Country",
-    "user": {
-        "id": 1
-        
-    }
+        "firstName": "Tommy",
+        "lastName": "Smith",
+        "dateOfBirth": "1995-05-15",
+        "address": "123 Main St, City, Country"
 }
-
 
 Output:
 {
     "id": 1,
+    "firstName": "Tom",
+    "lastName": "Smith",
+    "username": "Tom.Smith",
+    "password": "t69KJBIBY2",
+    "isActive": true,
     "dateOfBirth": "1995-05-15",
-    "address": "123 Main St, City, Country",
-    "user": {
-        "id": 1,
-        "firstName": "Joe",
-        "lastName": "Doe",
-        "username": "joe.doe",
-        "password": "password125",
-        "isActive": true
-    }
+    "address": "123 Main St, City, Country"
 }
 ##########################################
-Create trainers
-http://localhost:8080/api/trainers
+Create training type
 {
-    "trainingTypeDTO": {
-        "id": 1
-    },
-    "user": {
-        "id": 2
+  "trainingTypeName": "Yoga Training"
+}
+
+Output:
+{
+    "id": 3,
+    "trainingTypeName": "Yoga Training"
+}
+
+###########################################
+Create trainers
+http://localhost:8080/trainers
+{
+    "firstName": "John",
+    "lastName": "Doe",
+    "specialization": {
+        "trainingTypeName": "Yoga Training"
     }
 }
 
 Output:
 {
-    "id": 6,
-    "trainingTypeDTO": {
-        "id": 1,
-        "trainingTypeName": "Yoga Training"
-    },
-    "user": {
-        "id": 2,
-        "firstName": "Jane",
+        "id": 4,
+        "firstName": "John",
         "lastName": "Doe",
-        "username": "jane.doe",
-        "password": "password125",
-        "isActive": true
-    }
-}
+        "username": "John.Doe1",
+        "password": "Nhm0IIXSyJ",
+        "isActive": true,
+        "specialization": {
+            "id": 2,
+            "trainingTypeName": "Yoga Training"
+        }
+   }
 
 #########################################
 Create training
@@ -86,9 +65,9 @@ Create training
         "id": 1
     },
     "trainer": {
-        "id": 6
+        "id": 3
     },
-    "trainingName": "Yoga Session",
+    "trainingName": "Cardio Session",
     "trainingType": {
         "id": 1
     },
@@ -99,43 +78,37 @@ Create training
 
 Output:
 {
-    "id": 2,
-    "trainee": {
         "id": 1,
-        "dateOfBirth": "1995-05-15",
-        "address": "123 Main St, City, Country",
-        "user": {
+        "trainee": {
             "id": 1,
-            "firstName": "Joe",
+            "firstName": "Tom",
+            "lastName": "Smith",
+            "username": "Tom.Smith",
+            "password": "t69KJBIBY2",
+            "isActive": true,
+            "dateOfBirth": "1995-05-15",
+            "address": "123 Main St, City, Country"
+        },
+        "trainer": {
+            "id": 2,
+            "firstName": "John",
             "lastName": "Doe",
-            "username": "joe.doe",
-            "password": "password125",
-            "isActive": true
-        }
-    },
-    "trainer": {
-        "id": 6,
-        "specialization": {
-            "id": 1,
+            "username": "John.Doe",
+            "password": "W6e4maSQJr",
+            "isActive": true,
+            "specialization": {
+                "id": 4,
+                "trainingTypeName": "Cardio"
+            }
+        },
+        "trainingType": {
+            "id": 2,
             "trainingTypeName": "Yoga Training"
         },
-        "user": {
-            "id": 2,
-            "firstName": "Jane",
-            "lastName": "Doe",
-            "username": "jane.doe",
-            "password": "password125",
-            "isActive": true
-        }
+        "trainingName": "Cardio Session",
+        "trainingDate": "2024-01-10",
+        "trainingDuration": 60
     },
-    "trainingType": {
-        "id": 1,
-        "trainingTypeName": "Yoga Training"
-    },
-    "trainingName": "Yoga Session",
-    "trainingDate": "2024-01-10",
-    "trainingDuration": 60
-}
 
 
 

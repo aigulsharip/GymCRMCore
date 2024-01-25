@@ -1,4 +1,4 @@
-package com.example.GymCRM.entity;
+package com.example.gymcrmcore.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -14,7 +14,6 @@ public class TrainingType {
 
     @Column(name = "training_type_name", nullable = false)
     private String trainingTypeName;
-
 
 }
 
